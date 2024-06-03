@@ -184,6 +184,7 @@ public class CodeGenerator {
                 t = varType.Bool;
                 break;
         }
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), t);
         ss.push(temp);
         memory.add3AddressCode(Operation.ASSIGN, new Address(temp.num, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodReturnAddress(className, methodName), varType.Address), null);
@@ -239,6 +240,7 @@ public class CodeGenerator {
     }
 
     public void add() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -251,6 +253,7 @@ public class CodeGenerator {
     }
 
     public void sub() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -262,6 +265,7 @@ public class CodeGenerator {
     }
 
     public void mult() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -301,6 +305,7 @@ public class CodeGenerator {
     }
 
     public void equal() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -312,6 +317,7 @@ public class CodeGenerator {
     }
 
     public void less_than() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -323,6 +329,7 @@ public class CodeGenerator {
     }
 
     public void and() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -334,6 +341,7 @@ public class CodeGenerator {
     }
 
     public void not() {
+        memory.changeTemp();
         Address temp = new Address(memory.getTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();

@@ -7,6 +7,8 @@ import semantic.symbol.Symbol;
 import semantic.symbol.SymbolTable;
 import semantic.symbol.SymbolType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -18,6 +20,7 @@ public class CodeGenerator {
     private Stack<String> symbolStack = new Stack<>();
     private Stack<String> callStack = new Stack<>();
     private SymbolTable symbolTable;
+    private Map<Integer, SemanticFunction> functionMap;
 
     public CodeGenerator() {
         symbolTable = new SymbolTable(memory);
@@ -28,114 +31,51 @@ public class CodeGenerator {
         memory.pintCodeBlock();
     }
 
+    private void initializeFunctionMap() {
+        functionMap = new HashMap<>();
+        functionMap.put(1, new CheckID(this));
+        functionMap.put(2, new Pid(this));
+        functionMap.put(3, new Fpid(this));
+        functionMap.put(4, new Kpid(this));
+        functionMap.put(5, new Intpid(this));
+        functionMap.put(6, new StartCall(this));
+        functionMap.put(7, new Call(this));
+        functionMap.put(8, new Arg(this));
+        functionMap.put(9, new Assign(this));
+        functionMap.put(10, new Add(this));
+        functionMap.put(11, new Sub(this));
+        functionMap.put(12, new Mult(this));
+        functionMap.put(13, new Label(this));
+        functionMap.put(14, new Save(this));
+        functionMap.put(15, new While(this));
+        functionMap.put(16, new JpfSave(this));
+        functionMap.put(17, new JpHere(this));
+        functionMap.put(18, new Print(this));
+        functionMap.put(19, new Equal(this));
+        functionMap.put(20, new LessThan(this));
+        functionMap.put(21, new And(this));
+        functionMap.put(22, new Not(this));
+        functionMap.put(23, new DefClass(this));
+        functionMap.put(24, new DefMethod(this));
+        functionMap.put(25, new PopClass(this));
+        functionMap.put(26, new Extend(this));
+        functionMap.put(27, new DefField(this));
+        functionMap.put(28, new DefVar(this));
+        functionMap.put(29, new MethodReturn(this));
+        functionMap.put(30, new DefParam(this));
+        functionMap.put(31, new LastTypeBool(this));
+        functionMap.put(32, new LastTypeInt(this));
+        functionMap.put(33, new DefMain(this));
+    }
+
     public void semanticFunction(int func, Token next) {
-        Log.print("codegenerator : " + func);
-        switch (func) {
-            case 0:
-                return;
-            case 1:
-                checkID();
-                break;
-            case 2:
-                pid(next);
-                break;
-            case 3:
-                fpid();
-                break;
-            case 4:
-                kpid(next);
-                break;
-            case 5:
-                intpid(next);
-                break;
-            case 6:
-                startCall();
-                break;
-            case 7:
-                call();
-                break;
-            case 8:
-                arg();
-                break;
-            case 9:
-                assign();
-                break;
-            case 10:
-                add();
-                break;
-            case 11:
-                sub();
-                break;
-            case 12:
-                mult();
-                break;
-            case 13:
-                label();
-                break;
-            case 14:
-                save();
-                break;
-            case 15:
-                _while();
-                break;
-            case 16:
-                jpf_save();
-                break;
-            case 17:
-                jpHere();
-                break;
-            case 18:
-                print();
-                break;
-            case 19:
-                equal();
-                break;
-            case 20:
-                less_than();
-                break;
-            case 21:
-                and();
-                break;
-            case 22:
-                not();
-                break;
-            case 23:
-                defClass();
-                break;
-            case 24:
-                defMethod();
-                break;
-            case 25:
-                popClass();
-                break;
-            case 26:
-                extend();
-                break;
-            case 27:
-                defField();
-                break;
-            case 28:
-                defVar();
-                break;
-            case 29:
-                methodReturn();
-                break;
-            case 30:
-                defParam();
-                break;
-            case 31:
-                lastTypeBool();
-                break;
-            case 32:
-                lastTypeInt();
-                break;
-            case 33:
-                defMain();
-                break;
+        SemanticFunction function = functionMap.get(func);
+        if (function != null) {
+            function.execute(next);
         }
     }
 
-    private void defMain() {
+    void defMain() {
         //ss.pop();
         memory.add3AddressCode(ss.pop().num, Operation.JP, new Address(memory.getCurrentCodeBlockAddress(), varType.Address), null, null);
         String methodName = "main";

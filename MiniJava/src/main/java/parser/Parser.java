@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import Log.Log;
 import codeGenerator.CodeGenerator;
+import codeGenerator.CodeGeneratorFacade;
 import errorHandler.ErrorHandler;
 import scanner.lexicalAnalyzer;
 import scanner.token.Token;
@@ -17,25 +18,25 @@ public class Parser {
     private Stack<Integer> parsStack;
     private ParseTable parseTable;
     private lexicalAnalyzer lexicalAnalyzer;
-    private CodeGenerator cg;
+    private CodeGeneratorFacade cg;
 
     public Parser() {
         parsStack = new Stack<Integer>();
         parsStack.push(0);
         try {
-            parseTable = new ParseTable(Files.readAllLines(Paths.get("src/main/resources/parseTable")).get(0));
+            parseTable = new ParseTable(Files.readAllLines(Paths.get("MiniJava/src/main/resources/parseTable")).get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
         rules = new ArrayList<Rule>();
         try {
-            for (String stringRule : Files.readAllLines(Paths.get("src/main/resources/Rules"))) {
+            for (String stringRule : Files.readAllLines(Paths.get("MiniJava/src/main/resources/Rules"))) {
                 rules.add(new Rule(stringRule));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cg = new CodeGenerator();
+        cg = new CodeGeneratorFacade();
     }
 
     public void startParse(java.util.Scanner sc) {

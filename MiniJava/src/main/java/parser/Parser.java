@@ -44,12 +44,13 @@ public class Parser {
         Token lookAhead = lexicalAnalyzer.getNextToken();
         boolean finish = false;
         Action currentAction;
+        Log logger = Log.getInstance();
         while (!finish) {
             try {
-                Log.print(/*"lookahead : "+*/ lookAhead.toString() + "\t" + parsStack.peek());
+                logger.print(/*"lookahead : "+*/ lookAhead.toString() + "\t" + parsStack.peek());
 //                Log.print("state : "+ parsStack.peek());
                 currentAction = parseTable.getActionTable(parsStack.peek(), lookAhead);
-                Log.print(currentAction.toString());
+                logger.print(currentAction.toString());
                 //Log.print("");
 
                 switch (currentAction.action) {
@@ -64,22 +65,22 @@ public class Parser {
                             parsStack.pop();
                         }
 
-                        Log.print(/*"state : " +*/ parsStack.peek() + "\t" + rule.LHS);
+                        logger.print(/*"state : " +*/ parsStack.peek() + "\t" + rule.LHS);
 //                        Log.print("LHS : "+rule.LHS);
                         parsStack.push(parseTable.getGotoTable(parsStack.peek(), rule.LHS));
-                        Log.print(/*"new State : " + */parsStack.peek() + "");
+                        logger.print(/*"new State : " + */parsStack.peek() + "");
 //                        Log.print("");
                         try {
                             cg.semanticFunction(rule.semanticAction, lookAhead);
                         } catch (Exception e) {
-                            Log.print("Code Genetator Error");
+                            logger.print("Code Genetator Error");
                         }
                         break;
                     case accept:
                         finish = true;
                         break;
                 }
-                Log.print("");
+                logger.print("");
             } catch (Exception ignored) {
                 ignored.printStackTrace();
 //                boolean find = false;

@@ -24,7 +24,7 @@ public class Parser {
         parsStack = new Stack<Integer>();
         parsStack.push(0);
         try {
-            parseTable = new ParseTable(Files.readAllLines(Paths.get("MiniJava/src/main/resources/parseTable")).get(0));
+            parseTable = new ParseTable(Files.readAllLines(Paths.get("src/main/resources/parseTable")).get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -35,7 +35,7 @@ public class Parser {
 
     private void loadRules() {
         try {
-            for (String stringRule : Files.readAllLines(Paths.get("MiniJava/src/main/resources/Rules"))) {
+            for (String stringRule : Files.readAllLines(Paths.get("src/main/resources/Rules"))) {
                 rules.add(new Rule(stringRule));
             }
         } catch (IOException e) {
